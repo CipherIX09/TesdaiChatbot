@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A simple, friendly AI assistant website. Ask questions, explore ideas, and get help with your next task." />
+  <meta name="theme-color" content="#0b1020" />
+  <title>Nova AI — Your everyday AI assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: rgba(20, 28, 52, .72);
+      --panel-solid: #111a31;
+      --text: #f5f7ff;
+      --muted: #a8b2ce;
+      --line: rgba(190, 204, 255, .14);
+      --accent: #9a8cff;
+      --accent-2: #55d6be;
+      --max: 1120px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; color: var(--text); background:
+        radial-gradient(ellipse at 12% 8%, rgba(117, 91, 255, .18), transparent 36%),
+        radial-gradient(ellipse at 88% 24%, rgba(54, 210, 185, .10), transparent 32%),
+        var(--bg);
+      font-family: "DM Sans", sans-serif; line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .wrap { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 24px 0; }
+    .brand { display: inline-flex; align-items: center; gap: 11px; font: 700 1.15rem "Space Grotesk", sans-serif; letter-spacing: -.03em; }
+    .brand-mark { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 12px; background: linear-gradient(135deg, var(--accent), #6cddce); color: #101426; font-weight: 800; box-shadow: 0 7px 24px #8b80ff35; }
+    .nav-links { display: flex; gap: 28px; align-items: center; color: var(--muted); font-size: .92rem; }
+    .nav-links a:hover, .footer-links a:hover { color: white; }
+    .nav-cta, .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 0; border-radius: 999px; padding: 12px 19px; background: linear-gradient(110deg, var(--accent), #70dccc); color: #101426; font-weight: 700; cursor: pointer; transition: transform .2s, box-shadow .2s; box-shadow: 0 8px 28px #8e85ff25; }
+    .nav-cta:hover, .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px #8e85ff45; }
+    .btn.secondary { color: var(--text); background: rgba(255,255,255,.05); border: 1px solid var(--line); box-shadow: none; }
+    .hero { display: grid; grid-template-columns: 1.02fr .98fr; gap: 60px; align-items: center; padding: 76px 0 92px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: rgba(255,255,255,.035); padding: 7px 12px; border-radius: 999px; color: #c7c3ff; font-size: .82rem; font-weight: 600; }
+    .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 0 5px #55d6be19; }
+    h1, h2, h3 { font-family: "Space Grotesk", sans-serif; line-height: 1.12; letter-spacing: -.045em; }
+    h1 { font-size: clamp(2.9rem, 6vw, 5rem); margin: 22px 0; max-width: 650px; }
+    .gradient-text { background: linear-gradient(105deg, #b6aaff 10%, #72e1ce 90%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero-copy { color: var(--muted); font-size: 1.1rem; max-width: 520px; margin-bottom: 28px; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .tiny-note { color: #7f8aa9; font-size: .82rem; margin-top: 17px; }
+    .preview-shell { position: relative; border: 1px solid rgba(190,204,255,.18); border-radius: 26px; padding: 13px; background: linear-gradient(145deg, rgba(255,255,255,.09), rgba(255,255,255,.025)); box-shadow: 0 35px 100px rgba(0,0,0,.32); }
+    .preview-shell:before { content: ""; position: absolute; width: 170px; height: 170px; background: #8d7dff; filter: blur(85px); opacity: .23; right: -35px; top: -30px; pointer-events: none; }
+    .chat-preview { position: relative; overflow: hidden; border-radius: 18px; background: #10182e; border: 1px solid var(--line); min-height: 420px; }
+    .chat-head { padding: 18px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.025); }
+    .avatar { width: 39px; height: 39px; border-radius: 14px; display: grid; place-items: center; background: linear-gradient(135deg, #9b8cff, #55d6be); color: #101426; font-size: 1.1rem; font-weight: 800; }
+    .chat-title { font-weight: 700; }
+    .chat-status { color: #8b99b9; font-size: .78rem; }
+    .chat-status span { color: var(--accent-2); }
+    .chat-body { padding: 23px 18px 18px; display: flex; flex-direction: column; gap: 14px; }
+    .bubble { max-width: 90%; padding: 13px 15px; border-radius: 16px; font-size: .9rem; }
+    .bubble.bot { align-self: flex-start; background: #1b2744; color: #e7ebff; border-bottom-left-radius: 5px; }
+    .bubble.user { align-self: flex-end; background: linear-gradient(120deg, #8d80f7, #63cfc3); color: #101426; border-bottom-right-radius: 5px; font-weight: 600; }
+    .suggestions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 3px; }
+    .suggestions span { border: 1px solid var(--line); border-radius: 999px; color: #bdc7e4; padding: 7px 10px; font-size: .74rem; }
+    .chat-input { margin: 5px 15px 15px; padding: 11px 12px 11px 16px; border: 1px solid var(--line); border-radius: 14px; display: flex; justify-content: space-between; align-items: center; color: #7885a5; font-size: .82rem; background: rgba(255,255,255,.025); }
+    .send { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 9px; color: #101426; background: var(--accent-2); font-weight: 900; }
+    .section { padding: 78px 0; }
+    .section-head { text-align: center; max-width: 650px; margin: 0 auto 38px; }
+    .kicker { text-transform: uppercase; color: var(--accent-2); font-size: .75rem; font-weight: 700; letter-spacing: .16em; }
+    h2 { font-size: clamp(2rem, 4vw, 3.1rem); margin: 13px 0; }
+    .section-head p { color: var(--muted); margin: 0; }
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .feature { padding: 25px; border: 1px solid var(--line); border-radius: 20px; background: var(--panel); }
+    .feature-icon { display: grid; place-items: center; width: 45px; height: 45px; border-radius: 14px; background: #a69aff18; border: 1px solid #a69aff2c; font-size: 1.25rem; margin-bottom: 19px; }
+    .feature h3 { font-size: 1.16rem; letter-spacing: -.025em; margin: 0 0 9px; }
+    .feature p { color: var(--muted); font-size: .92rem; margin: 0; }
+    .demo-section { padding-top: 20px; }
+    .demo-card { display: grid; grid-template-columns: .8fr 1.2fr; gap: 35px; padding: clamp(24px, 5vw, 48px); border: 1px solid var(--line); border-radius: 26px; background: linear-gradient(130deg, rgba(154,140,255,.10), rgba(85,214,190,.045)); align-items: center; }
+    .demo-card p { color: var(--muted); }
+    .steps { display: grid; gap: 13px; }
+    .step { display: flex; gap: 14px; padding: 16px; border-radius: 15px; background: rgba(9,14,30,.45); border: 1px solid var(--line); }
+    .step-num { flex: 0 0 30px; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 10px; background: #9a8cff22; color: #c8c0ff; font-weight: 700; }
+    .step strong { display: block; font-size: .92rem; margin-bottom: 2px; }
+    .step span { display: block; color: var(--muted); font-size: .82rem; }
+    .cta-panel { text-align: center; padding: 52px 24px; border: 1px solid var(--line); border-radius: 24px; background: radial-gradient(ellipse at 50% 0%, #9a8cff19, transparent 65%), var(--panel); }
+    .cta-panel p { color: var(--muted); max-width: 550px; margin: 0 auto 24px; }
+    footer { padding: 26px 0 36px; border-top: 1px solid var(--line); color: #8792b0; font-size: .82rem; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .footer-links { display: flex; gap: 18px; }
+    .notice { margin-top: 18px; padding: 12px 14px; border: 1px solid #e4c47a42; border-radius: 12px; color: #d8c89f; background: #e4c47a0b; font-size: .82rem; }
+    @media (max-width: 850px) {
+      .hero { grid-template-columns: 1fr; gap: 38px; padding-top: 48px; }
+      .hero-copy { max-width: 680px; }
+      .preview-shell { max-width: 620px; width: 100%; margin: 0 auto; }
+      .features { grid-template-columns: 1fr 1fr; }
+      .demo-card { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .wrap { width: min(var(--max), calc(100% - 28px)); }
+      .nav { padding: 17px 0; }
+      .nav-links { gap: 13px; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .nav-cta { padding: 10px 13px; font-size: .82rem; }
+      .hero { padding: 42px 0 62px; }
+      h1 { font-size: 3rem; }
+      .hero-copy { font-size: 1rem; }
+      .features { grid-template-columns: 1fr; }
+      .section { padding: 57px 0; }
+      .chat-preview { min-height: 390px; }
+      .footer-inner { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+
+  <!-- BOT INTEGRATION:
+       After publishing your Botpress bot, open Webchat > Deploy Settings
+       and paste the exact embed code supplied by Botpress here, before </head>.
+       Official guide: https://botpress.com/docs/webchat/get-started/quick-start/
+       Do not paste private API keys into this public website. -->
+</head>
+<body>
+  <header class="wrap">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="#home" aria-label="Nova AI home">
+        <span class="brand-mark">N</span><span>nova<span class="gradient-text">.ai</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How it works</a>
+        <a class="nav-cta" href="#get-started">Get started <span aria-hidden="true">↗</span></a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="wrap hero" id="home">
+      <div>
+        <div class="eyebrow"><span class="pulse"></span> Your everyday AI companion</div>
+        <h1>Big ideas start with <span class="gradient-text">a simple chat.</span></h1>
+        <p class="hero-copy">Meet a helpful AI assistant for questions, brainstorming, learning, and getting unstuck. Clear answers, fresh ideas, and a little more momentum for your day.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#get-started">Meet your AI assistant <span aria-hidden="true">→</span></a>
+          <a class="btn secondary" href="#features">Explore features</a>
+        </div>
+        <p class="tiny-note">A simple starter website · Ready for your chatbot integration</p>
+      </div>
+
+      <div class="preview-shell" aria-label="Illustration of an AI chat conversation">
+        <div class="chat-preview">
+          <div class="chat-head">
+            <div class="avatar">N</div>
+            <div><div class="chat-title">Nova Assistant</div><div class="chat-status"><span>●</span> Ready when you are</div></div>
+          </div>
+          <div class="chat-body">
+            <div class="bubble bot">Hey there! 👋 I'm Nova. I can help you think through an idea, learn something new, or plan your next move.</div>
+            <div class="bubble user">I want to learn something new, but I'm not sure where to start.</div>
+            <div class="bubble bot">Let's make it easy. What's something you've been curious about lately? We can turn it into a small, doable first step.</div>
+            <div class="suggestions"><span>💡 Brainstorm ideas</span><span>📚 Learn a topic</span><span>🗓️ Plan my week</span></div>
+          </div>
+          <div class="chat-input"><span>Ask Nova anything...</span><span class="send">↑</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="kicker">Made to be useful</div>
+          <h2>A little help goes a long way.</h2>
+          <p>Use your AI assistant to turn questions into clarity and ideas into action.</p>
+        </div>
+        <div class="features">
+          <article class="feature"><div class="feature-icon">✦</div><h3>Get clear answers</h3><p>Break down unfamiliar topics into straightforward explanations and practical next steps.</p></article>
+          <article class="feature"><div class="feature-icon">◈</div><h3>Think out loud</h3><p>Brainstorm concepts, compare options, and shape a rough idea into something useful.</p></article>
+          <article class="feature"><div class="feature-icon">⌁</div><h3>Make a plan</h3><p>Organize tasks, map out a project, or build a simple routine that works for you.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section demo-section" id="how-it-works">
+      <div class="wrap">
+        <div class="demo-card">
+          <div>
+            <div class="kicker">Simple by design</div>
+            <h2>Your next step is just a conversation away.</h2>
+            <p>This site is a lightweight front end. Connect a hosted chatbot such as Botpress to make the chat widget interactive—no custom backend required for the basic setup.</p>
+            <a class="btn secondary" href="https://botpress.com/docs/webchat/get-started/quick-start/" target="_blank" rel="noopener noreferrer">Read integration guide ↗</a>
+          </div>
+          <div class="steps">
+            <div class="step"><div class="step-num">1</div><div><strong>Create your AI agent</strong><span>Build and test the assistant in your chatbot platform.</span></div></div>
+            <div class="step"><div class="step-num">2</div><div><strong>Copy the website embed code</strong><span>Get the official Webchat snippet from your agent's deployment settings.</span></div></div>
+            <div class="step"><div class="step-num">3</div><div><strong>Publish with GitHub Pages</strong><span>Upload these files to a public GitHub repository and enable Pages.</span></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="get-started">
+      <div class="wrap">
+        <div class="cta-panel">
+          <div class="kicker">Let's get chatting</div>
+          <h2>Ready to meet your AI assistant?</h2>
+          <p>Once your chatbot is connected, visitors will be able to open the chat widget and start asking questions right from this website.</p>
+          <a class="btn" href="https://botpress.com/" target="_blank" rel="noopener noreferrer">Build your chatbot ↗</a>
+          <div class="notice"><strong>Setup note:</strong> This template is prepared for a Botpress widget, but the live AI chat will not appear until you paste in your own Botpress embed code.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <a class="brand" href="#home"><span class="brand-mark">N</span><span>nova<span class="gradient-text">.ai</span></span></a>
+      <span>© <span id="year"></span> Nova AI. Built for curious minds.</span>
+      <div class="footer-links"><a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="https://botpress.com/" target="_blank" rel="noopener noreferrer">Botpress</a></div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+
+  <!-- Paste the Botpress embed code here instead if their dashboard instructs you to add it before </body>. -->
+</body>
+</html>
